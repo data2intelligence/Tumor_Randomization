@@ -40,15 +40,21 @@ def main():
     data_map = {}
     
     # load in excel data and do sanity check
-    for title in ['Group', 'Size']:
-        data = pandas.read_excel(os.path.join(current_path, f), sheet_name=title, index_col=0)
-        
+    for title in ['Group', 'Size']:        
         try:
-            data = pandas.read_excel(os.path.join(current_path, f), sheet_name=title, index_col=0)
+            data = pandas.read_excel(os.path.join(current_path, f), sheet_name=title, index_col=0, engine='openpyxl')
         except:
             sys.stderr.write('Cannot find the %s information\n' % title)
             sys.exit(1)
-    
+        
+        
+        data = data.loc[:, data.isnull().mean() < 1].dropna()
+        
+        if title == 'Group':
+            data = data.astype(int)
+        elif title == 'Size':
+            data.index = data.index.astype(int)
+        
         assert data.index.value_counts().max() == 1    
         data_map[title] = data
     
@@ -127,7 +133,7 @@ def main():
     for i, arr in enumerate(lst):
         boxplot_one(plt, arr, i, 'dodgerblue')
     
-    plt.xticks(range(len(lst)), size_group.index, rotation=45)
+    plt.xticks(range(len(lst)), size_group.index, rotation=90)
     plt.ylabel('tumor size')
     
     pdf.savefig(fig, bbox_inches='tight', transparent=True)
