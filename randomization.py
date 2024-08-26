@@ -66,7 +66,8 @@ def main():
     for title in ['Short', 'Long']:
         assert title in data_map['Size'].columns
     
-    tumor_size = data_map['Size']['Short'] * data_map['Size']['Long']
+    #tumor_size = data_map['Size']['Short'] * data_map['Size']['Long']
+    tumor_size = data_map['Size']['Short'] * data_map['Size']['Short'] * data_map['Size']['Long'] / 2
     tumor_size.name = 'Size'
     
     merge = []
