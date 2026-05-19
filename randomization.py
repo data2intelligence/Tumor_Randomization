@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
 # randomize each time to get different result, if the user doesn't like the previous one
-random.seed(datetime.now())
+random.seed(datetime.now().timestamp())
 
 nrand = 1000
 font_size = 30
@@ -144,7 +144,7 @@ def main():
     
     fout = pandas.ExcelWriter(output + '.group.xlsx')
     for i, group in enumerate(lst):
-        group.to_excel(fout, size_group.index[i])
-    fout.save()
+        group.to_excel(fout, sheet_name=size_group.index[i])
+    fout.close()
 
 if __name__ == '__main__': main()
